@@ -95,12 +95,14 @@ body {
 }
 
 #answer-section {
-    position: fixed;
+    position: relative;
     bottom: 100px;
     width: 70%;
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 20;
+    /* z-indexを追加して次の問題へ進むボタンよりも背面に表示 */
 }
 
 #answer {
@@ -410,6 +412,9 @@ input[disabled] {
     text-align: center;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     margin-top: 20px;
+    position: relative;
+    z-index: 1001;
+    /* z-indexを追加して前面に表示 */
 }
 
 #next-question p {
@@ -437,7 +442,6 @@ input[disabled] {
     margin-top: 10px;
 }
 
-/* モーダル用のスタイルを追加 */
 .modal {
     display: none;
     position: fixed;

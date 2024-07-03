@@ -17,20 +17,6 @@ app.get('/', (req, res) => {
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
-wss.on('connection', ws => {
-    console.log('New client connected');
-    ws.on('message', message => {
-        console.log(`Received message: ${message}`);
-        // メッセージ処理のロジック
-    });
-
-    ws.on('close', () => {
-        console.log('Client disconnected');
-    });
-});
-
-// ここからは以前のコードのまま
-
 let clients = [];
 let connectedUsers = new Map(); // ユーザーとスコアを管理するMap
 let userHP = new Map(); // ユーザーとHPを管理するMap
@@ -61,10 +47,10 @@ wss.on('connection', ws => {
         console.log('Received message:', parsedMessage);
 
         if (parsedMessage.type === 'register') {
-            // ユーザーが既に登録されている場合はスコアとHPをリセット
+            // 古いユーザーが既に存在する場合、古い接続を削除
             if (connectedUsers.has(parsedMessage.user)) {
-                connectedUsers.delete(parsedMessage.user);
-                userHP.delete(parsedMessage.user);
+                clients = clients.filter(client => client !== ws);
+                console.log(`Old connection for user ${parsedMessage.user} removed`);
             }
 
             connectedUsers.set(parsedMessage.user, 0); // 新しいユーザーをスコア0で登録
@@ -102,26 +88,35 @@ wss.on('connection', ws => {
                 connectedUsers.set(parsedMessage.user, currentScore + 1); // スコアを更新
                 console.log(`${parsedMessage.user} scored! Current score: ${currentScore + 1}`);
 
+                let opponentDefeated = false; // 敵が倒されたかどうかを示すフラグ
+
                 // 相手のHPを減らす
                 for (let [user, hp] of userHP.entries()) {
                     if (user !== parsedMessage.user) {
-                        userHP.set(user, hp - 1);
-                        console.log(`${user}'s HP decreased to ${hp - 1}`);
                         if (hp - 1 <= 0) {
+                            userHP.set(user, 0); // 相手のHPを0に設定
                             quizActive = false;
+                            opponentDefeated = true; // 敵が倒されたことを示す
                             console.log(`${parsedMessage.user} has won the game!`);
                             result.winner = true; // 勝者を示すフラグを追加
 
                             // 勝者を通知し、ゲームを終了
                             clients.forEach(client => {
                                 if (client.readyState === WebSocket.OPEN) {
-                                    client.send(JSON.stringify({ type: 'endGame', winner: `${parsedMessage.user} WIN!!`, hp: Array.from(userHP.entries()) }));
+                                    client.send(JSON.stringify({
+                                        type: 'endGame',
+                                        winner: `${parsedMessage.user} WIN!!`,
+                                        hp: Array.from(userHP.entries())
+                                    }));
                                 }
                             });
 
                             // ゲーム終了後にリセット
                             resetGame();
                             break;
+                        } else {
+                            userHP.set(user, hp - 1);
+                            console.log(`${user}'s HP decreased to ${hp - 1}`);
                         }
                     }
                 }
@@ -135,21 +130,30 @@ wss.on('connection', ws => {
                         client.send(JSON.stringify({ type: 'updateScores', scores: result.scores, hp: result.hp }));
                     }
                 });
-            }
 
-            clients.forEach(client => {
-                if (client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify({ type: 'answer', ...result }));
+                // 正解音を再生する
+                if (!opponentDefeated) {
+                    clients.forEach(client => {
+                        if (client.readyState === WebSocket.OPEN) {
+                            client.send(JSON.stringify({ type: 'playCorrectSound' }));
+                        }
+                    });
                 }
-            });
 
-            // 問題が終了した場合、次の問題を始めるボタンを表示
-            if (result.correct && quizActive) {
                 clients.forEach(client => {
                     if (client.readyState === WebSocket.OPEN) {
-                        client.send(JSON.stringify({ type: 'showNextButton' }));
+                        client.send(JSON.stringify({ type: 'answer', ...result }));
                     }
                 });
+
+                // 問題が終了した場合、次の問題を始めるボタンを表示
+                if (result.correct && quizActive) {
+                    clients.forEach(client => {
+                        if (client.readyState === WebSocket.OPEN) {
+                            client.send(JSON.stringify({ type: 'showNextButton' }));
+                        }
+                    });
+                }
             }
         } else if (parsedMessage.type === 'readyForNextQuestion' && quizActive) {
             readyForNextQuestion.add(parsedMessage.user);
@@ -167,6 +171,13 @@ wss.on('connection', ws => {
             clients.forEach(client => {
                 if (client.readyState === WebSocket.OPEN) {
                     client.send(JSON.stringify({ type: 'waitingForNext', usersReady: Array.from(readyForNextQuestion) }));
+                }
+            });
+
+            // 回答欄をクリアするメッセージをクライアントに送信
+            clients.forEach(client => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({ type: 'clearAnswerInput' }));
                 }
             });
         } else if (parsedMessage.type === 'startQuizRequest') {

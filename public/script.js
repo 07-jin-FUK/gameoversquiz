@@ -74,6 +74,7 @@ function connectWebSocket() {
             document.getElementById('responses').innerHTML = ''; // 回答ログをリセット
             enableInput(); // 入力を有効化
         }
+
         if (message.type === 'answer') {
             const responseElement = document.createElement('p');
             responseElement.innerHTML = `<strong>${message.user}:</strong> ${message.answer}`;
@@ -83,9 +84,6 @@ function connectWebSocket() {
                 if (!victoryDisplayed) {
                     document.getElementById('next-question').style.display = 'block'; // 正答後に表示
                 }
-
-                // 正解の効果音を再生
-                document.getElementById('correct-sound').play();
 
                 if (message.user === user) {
                     showAttack();
@@ -101,6 +99,10 @@ function connectWebSocket() {
             console.log('Adding response to log:', responseElement); // デバッグ用ログ
             document.getElementById('responses').appendChild(responseElement); // 回答ログを追加
         }
+
+        if (message.type === 'playCorrectSound') {
+            document.getElementById('correct-sound').play(); // 正解の効果音を再生
+        }
         if (message.type === 'updateScores') {
             // HP表示を更新
             updateHP(message.hp);
@@ -109,6 +111,7 @@ function connectWebSocket() {
             document.getElementById('quiz-section').style.display = 'none';
             document.getElementById('ready-message').style.display = 'none';
             document.getElementById('next-question').style.display = 'none';
+            updateHP(message.hp); // 勝利カットイン前にHPを更新
             showVictoryCutin(); // 勝利カットインを表示
         }
         if (message.type === 'showNextButton') {
@@ -122,7 +125,13 @@ function connectWebSocket() {
         if (message.type === 'startNextQuiz') {
             startCountdownForNext(); // 次の問題のカウントダウンを開始
         }
+
+        // 回答欄をリセットする処理を追加
+        if (message.type === 'clearAnswerInput') {
+            document.getElementById('answer').value = ''; // 回答欄をリセット
+        }
     };
+
 
     ws.onclose = () => {
         console.log('WebSocket connection closed. Reconnecting...');
@@ -185,13 +194,16 @@ function startCountdown() {
     countdownElement.textContent = countdown; // 初期値の設定
     const interval = setInterval(() => {
         countdown--;
-        countdownElement.textContent = countdown;
-        document.getElementById('countdown-sound').play(); // カウントダウン効果音を再生
-        if (countdown <= 0) {
+        if (countdown > 0) {
+            countdownElement.textContent = countdown;
+        } else if (countdown === 0) {
+            countdownElement.textContent = "Fight!";
+        } else {
             clearInterval(interval);
             // カウントダウンが0になった時に問題を表示する
             ws.send(JSON.stringify({ type: 'startQuizRequest', user: user }));
         }
+        document.getElementById('countdown-sound').play(); // カウントダウン効果音を再生
     }, 1000);
 }
 
