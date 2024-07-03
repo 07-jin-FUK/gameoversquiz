@@ -141,6 +141,10 @@ function connectWebSocket() {
         if (message.type === 'clearAnswerInput') {
             document.getElementById('answer').value = ''; // 回答欄をリセット
         }
+        if (message.type === 'opponentDisconnected') {
+            alert('対戦相手の接続が切れました。名前入力画面に戻ります。');
+            resetClientState();
+        }
     };
 
 
@@ -152,6 +156,25 @@ function connectWebSocket() {
     ws.onerror = (error) => {
         console.error('WebSocket error:', error);
     };
+}
+
+function resetClientState() {
+    user = '';
+    document.getElementById('user-section').style.display = 'block';
+    document.getElementById('waiting-message').style.display = 'none';
+    document.getElementById('main-content').classList.add('hidden');
+    document.getElementById('ready-message').style.display = 'none';
+    document.getElementById('quiz-section').style.display = 'none';
+    document.getElementById('next-question').style.display = 'none';
+    document.getElementById('responses').innerHTML = '';
+    document.querySelector('#my-hp .hp-bar-inner').style.width = '100%';
+    document.querySelector('#opponent-hp .hp-bar-inner').style.width = '100%';
+    document.querySelector('#my-hp .hp-bar-inner').style.backgroundColor = 'green';
+    document.querySelector('#opponent-hp .hp-bar-inner').style.backgroundColor = 'green';
+    document.getElementById('final-background').style.display = 'none';
+    document.getElementById('final-image').style.display = 'none';
+    victoryDisplayed = false;
+    ws.close();
 }
 
 function sendAnswer() {

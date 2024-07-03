@@ -483,9 +483,9 @@ input[disabled] {
 #my-name,
 #opponent-name {
     position: absolute;
-    top: 50px;
+    top: 40px;
     /* HPバーの下の位置に合わせて調整 */
-    font-size: 20px;
+    font-size: 28px;
     font-weight: bold;
     color: white;
     z-index: 1001;
@@ -493,11 +493,13 @@ input[disabled] {
 }
 
 #my-name {
-    left: 10px;
+    left: 90px;
+
     /* 左端に固定 */
 }
 
 #opponent-name {
-    right: 10px;
+    right: 90px;
+
     /* 右端に固定 */
 }

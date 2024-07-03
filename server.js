@@ -53,6 +53,7 @@ wss.on('connection', ws => {
                 console.log(`Old connection for user ${parsedMessage.user} removed`);
             }
 
+
             connectedUsers.set(parsedMessage.user, 0); // 新しいユーザーをスコア0で登録
             userHP.set(parsedMessage.user, maxHP); // 新しいユーザーをHP5で登録
             console.log(`User registered: ${parsedMessage.user}`);
@@ -190,6 +191,22 @@ wss.on('connection', ws => {
     ws.on('close', () => {
         clients = clients.filter(client => client !== ws);
         console.log('Client disconnected');
+        // 切断されたユーザーを削除
+        connectedUsers.forEach((score, user) => {
+            if (!clients.some(client => client.user === user)) {
+                connectedUsers.delete(user);
+                userHP.delete(user);
+                console.log(`Removed user ${user} from connectedUsers`);
+            }
+
+        });
+        clients.forEach(client => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify({ type: 'opponentDisconnected' }));
+            }
+        });
+
+        resetGame();
     });
 });
 
