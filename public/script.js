@@ -142,8 +142,10 @@ function connectWebSocket() {
             document.getElementById('answer').value = ''; // 回答欄をリセット
         }
         if (message.type === 'opponentDisconnected') {
-            alert('対戦相手の接続が切れました。初期画面に戻ります。');
-            location.reload(); // ページを再読み込みして初期画面に戻す
+            alert('対戦相手の接続が切れました。5秒後に初期画面に戻ります。');
+            setTimeout(() => {
+                location.reload(); // ページを再読み込みして初期画面に戻す
+            }, 5000);  // 5秒後
         }
     };
 
@@ -237,7 +239,7 @@ function startQuiz() {
         connectWebSocket();
         // 状態3BGMを再生
         let state3Bgm = document.getElementById('state3-bgm');
-        state3Bgm.volume = 0.2; // 音量を50%に設定
+        state3Bgm.volume = 0.3; // 音量を50%に設定
         state3Bgm.play();
     } else {
         alert('Please enter a username');
@@ -245,7 +247,7 @@ function startQuiz() {
 }
 
 function cancel() {
-    alert('Canceled');
+    alert('止まれるわけないだろう。早く始めようぜ。');
 }
 
 function startCountdown() {
@@ -258,6 +260,7 @@ function startCountdown() {
             countdownElement.textContent = countdown;
         } else if (countdown === 0) {
             countdownElement.textContent = "Fight!";
+            document.getElementById('fight-sound').play();
         } else {
             clearInterval(interval);
             // カウントダウンが0になった時に問題を表示する
@@ -275,7 +278,7 @@ function startCountdownForNext() {
         document.getElementById('ready-message').style.display = 'none';
         document.getElementById('quiz-section').style.display = 'block';
         document.getElementById('next-question').style.display = 'none'; // カウントダウン中は非表示にする
-        document.getElementById('fight-sound').play();
+
     }, 6000);  // 6秒後に画面を切り替える
 }
 
