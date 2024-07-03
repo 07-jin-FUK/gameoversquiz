@@ -22,18 +22,18 @@ let connectedUsers = new Map(); // ユーザーとスコアを管理するMap
 let userHP = new Map(); // ユーザーとHPを管理するMap
 let readyForNextQuestion = new Set();
 const questions = [
-    { question: "複数のテーブルから関連する列を基にデータを取得するために使用されるSQL句は何ですか？", example: "SELECT * FROM table1 INNER ____ table2 ON table1.id = table2.id;", answer: "JOIN" },
-    { question: "テーブル内の行数を数えるために使用されるSQL関数は何ですか？", example: "SELECT ____(*) FROM table1;", answer: "COUNT" },
-    { question: "レコードをフィルタリングするために使用されるSQL句は何ですか？", example: "SELECT * FROM table1 ____ condition;", answer: "WHERE" },
-    { question: "列内の最大値を見つけるために使用されるSQL関数は何ですか？", example: "SELECT ____(column_name) FROM table1;", answer: "MAX" },
-    { question: "テーブルに新しいレコードを挿入するために使用されるSQL文は何ですか？", example: "____ ____ table1 (column1, column2) VALUES (value1, value2);", answer: "INSERT INTO" },
-    { question: "テーブルからレコードを削除するために使用されるSQL文は何ですか？", example: "____ FROM table1 WHERE condition;", answer: "DELETE" },
-    { question: "数値列の平均値を返すために使用されるSQL関数は何ですか？", example: "SELECT ____(column_name) FROM table1;", answer: "AVG" },
-    { question: "結果セットを並べ替えるために使用されるSQL句は何ですか？", example: "SELECT * FROM table1 ____ column_name ASC;", answer: "ORDER BY" },
-    { question: "テーブル内の既存のレコードを更新するために使用されるSQL文は何ですか？", example: "____ table1 SET column1 = value1 WHERE condition;", answer: "UPDATE" },
-    { question: "数値列の値を合計するために使用されるSQL関数は何ですか？", example: "SELECT ____(column_name) FROM table1;", answer: "SUM" },
+    { question: "複数のテーブルから関連する列を基にデータを取得するために使用されるSQL句は何ですか？", example: "SELECT * FROM table1 INNER ____ table2 ON table1.id = table2.id;", answer: "JOIN", type: "normal" },
+    { question: "テーブル内の行数を数えるために使用されるSQL関数は何ですか？", example: "SELECT ____(*) FROM table1;", answer: "COUNT", type: "normal" },
+    { question: "レコードをフィルタリングするために使用されるSQL句は何ですか？", example: "SELECT * FROM table1 ____ condition;", answer: "WHERE", type: "normal" },
+    { question: "列内の最大値を見つけるために使用されるSQL関数は何ですか？", example: "SELECT ____(column_name) FROM table1;", answer: "MAX", type: "normal" },
+    { question: "テーブルに新しいレコードを挿入するために使用されるSQL文は何ですか？", example: "____ ____ table1 (column1, column2) VALUES (value1, value2);", answer: "INSERT INTO", type: "normal" },
+    { question: "テーブルからレコードを削除するために使用されるSQL文は何ですか？", example: "____ FROM table1 WHERE condition;", answer: "DELETE", type: "normal" },
+    { question: "数値列の平均値を返すために使用されるSQL関数は何ですか？", example: "SELECT ____(column_name) FROM table1;", answer: "AVG", type: "normal" },
+    { question: "結果セットを並べ替えるために使用されるSQL句は何ですか？", example: "SELECT * FROM table1 ____ column_name ASC;", answer: "ORDER BY", type: "normal" },
+    { question: "テーブル内の既存のレコードを更新するために使用されるSQL文は何ですか？", example: "____ table1 SET column1 = value1 WHERE condition;", answer: "UPDATE", type: "normal" },
+    { question: "数値列の値を合計するために使用されるSQL関数は何ですか？", example: "SELECT ____(column_name) FROM table1;", answer: "SUM", type: "normal" },
     { question: "！ラッキー問題！これに正解するとHPが20％回復+相手ダメージ！太郎先生の名言、次に入るものは？", example: "code is ____", answer: "量", type: "lucky" },
-    { question: "！正解でダメージ2倍！このゲームのタイトルは？", example: "Why ____?;", answer: "Fight", type: "danger" }
+    { question: "！正解でダメージ2倍！このゲームのタイトルは？", example: "Why ____?;", answer: "Fight", type: "danger" },
 ];
 const maxHP = 5; // 最大HP
 let quizActive = false;
@@ -238,7 +238,7 @@ function sendQuestion() {
     const question = questions[currentQuestionIndex];
     clients.forEach(client => {
         if (client.readyState === WebSocket.OPEN) {
-            client.send(JSON.stringify({ type: 'startQuiz', question: question.question, example: question.example }));
+            client.send(JSON.stringify({ type: 'startQuiz', question: question.question, example: question.example, questionType: question.type }));
         }
     });
 }

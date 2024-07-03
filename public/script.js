@@ -78,6 +78,7 @@ function connectWebSocket() {
             document.getElementById('responses').innerHTML = ''; // 回答ログをリセット
             document.getElementById('answer').value = ''; // 回答欄をリセット
             enableInput(); // 入力を有効化
+            currentQuestionType = message.questionType;
         }
         if (message.type === 'answer') {
             const responseElement = document.createElement('p');
@@ -207,7 +208,7 @@ function sendAnswer() {
     const answer = answerInput.value;
 
     if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ type: 'answer', user: user, answer: answer }));
+        ws.send(JSON.stringify({ type: 'answer', user: user, answer: answer, questionType: currentQuestionType }));
         answerInput.value = '';
     } else {
         console.error('WebSocket is not open. Ready state: ' + ws.readyState);
