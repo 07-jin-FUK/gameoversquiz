@@ -1,8 +1,21 @@
+const fs = require('fs');
+const https = require('https');
 const WebSocket = require('ws');
+
+// SSL証明書の読み込み（Renderでは自動的に提供されるため省略可能）
+const server = https.createServer({
+    // cert: fs.readFileSync('/path/to/cert.pem'),
+    // key: fs.readFileSync('/path/to/key.pem')
+});
+
 const port = process.env.PORT || 443;
 
-const wss = new WebSocket.Server({ port: port });
-console.log(`WebSocket server is running on ws://localhost:${port}`);
+const wss = new WebSocket.Server({ server });
+console.log(`WebSocket server is running on wss://localhost:${port}`);
+
+server.listen(port, () => {
+    console.log(`HTTPS server is running on port ${port}`);
+});
 
 // ここからは以前のコードのまま
 
