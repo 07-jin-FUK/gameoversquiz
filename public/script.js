@@ -6,7 +6,7 @@ window.onload = function () {
     const userSection = document.getElementById('user-section');
     const waitingMessage = document.getElementById('waiting-message');
     const mainContent = document.getElementById('main-content');
-    const introSound = new Audio('./node_modules/Bgm/top.mp3'); // イントロGIFの効果音
+    const introSound = new Audio('./Bgm/top.mp3'); // イントロGIFの効果音
 
     setTimeout(() => {
         introSound.play(); // 効果音を再生
@@ -303,7 +303,7 @@ function showVictoryCutin() {
 
     setTimeout(() => {
         victoryElement.classList.remove('show');
-        document.getElementById('main-content').style.backgroundImage = 'url("./node_modules/Img/KOafter.gif")';
+        document.getElementById('main-content').style.backgroundImage = 'url("./Img/KOafter.gif")';
         document.getElementById('final-image').style.display = 'block';
 
         // Final-imageが表示されるタイミングで効果音を再生

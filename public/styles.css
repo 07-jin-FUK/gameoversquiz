@@ -142,7 +142,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     padding: 20px;
-    background-image: url('./node_modules/Img/gardo.gif');
+    background-image: url('./Img/gardo.gif');
     background-size: cover;
 }
 
@@ -260,15 +260,15 @@ body {
 }
 
 .attack-background {
-    background-image: url('./node_modules/Img/ao.gif');
+    background-image: url('./Img/ao.gif');
 }
 
 .damage-background {
-    background-image: url('./node_modules/Img/aka.gif');
+    background-image: url('./Img/aka.gif');
 }
 
 .victory-background {
-    background-image: url('./node_modules/Img/last.gif');
+    background-image: url('./Img/last.gif');
     z-index: 1005;
 }
 
