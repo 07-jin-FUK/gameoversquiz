@@ -1,6 +1,11 @@
 const WebSocket = require('ws');
+const port = process.env.PORT || 8080;
 
-const wss = new WebSocket.Server({ port: 8081 });
+const wss = new WebSocket.Server({ port: port });
+console.log(`WebSocket server is running on ws://localhost:${port}`);
+
+// ここからは以前のコードのまま
+
 
 let clients = [];
 let connectedUsers = new Map(); // ユーザーとスコアを管理するMap
