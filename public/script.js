@@ -72,9 +72,9 @@ function connectWebSocket() {
             document.getElementById('quiz').textContent = message.question;
             document.getElementById('example').textContent = message.example; // 例文を表示
             document.getElementById('responses').innerHTML = ''; // 回答ログをリセット
+            document.getElementById('answer').value = ''; // 回答欄をリセット
             enableInput(); // 入力を有効化
         }
-
         if (message.type === 'answer') {
             const responseElement = document.createElement('p');
             responseElement.innerHTML = `<strong>${message.user}:</strong> ${message.answer}`;
@@ -113,6 +113,9 @@ function connectWebSocket() {
             document.getElementById('next-question').style.display = 'none';
             updateHP(message.hp); // 勝利カットイン前にHPを更新
             showVictoryCutin(); // 勝利カットインを表示
+
+            document.getElementById('end-game').classList.remove('hidden');
+            document.getElementById('winner-message').textContent = message.winner; // 勝者メッセージを表示
         }
         if (message.type === 'showNextButton') {
             if (!victoryDisplayed) {

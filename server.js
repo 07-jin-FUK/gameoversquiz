@@ -139,21 +139,22 @@ wss.on('connection', ws => {
                         }
                     });
                 }
+            }
 
+            // 回答をクライアントに送信（正解/不正解に関係なく）
+            clients.forEach(client => {
+                if (client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify({ type: 'answer', ...result }));
+                }
+            });
+
+            // 問題が終了した場合、次の問題を始めるボタンを表示
+            if (result.correct && quizActive) {
                 clients.forEach(client => {
                     if (client.readyState === WebSocket.OPEN) {
-                        client.send(JSON.stringify({ type: 'answer', ...result }));
+                        client.send(JSON.stringify({ type: 'showNextButton' }));
                     }
                 });
-
-                // 問題が終了した場合、次の問題を始めるボタンを表示
-                if (result.correct && quizActive) {
-                    clients.forEach(client => {
-                        if (client.readyState === WebSocket.OPEN) {
-                            client.send(JSON.stringify({ type: 'showNextButton' }));
-                        }
-                    });
-                }
             }
         } else if (parsedMessage.type === 'readyForNextQuestion' && quizActive) {
             readyForNextQuestion.add(parsedMessage.user);

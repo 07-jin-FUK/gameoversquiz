@@ -95,14 +95,16 @@ body {
 }
 
 #answer-section {
-    position: relative;
-    bottom: 100px;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 70%;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 20;
-    /* z-indexを追加して次の問題へ進むボタンよりも背面に表示 */
+    z-index: 100;
+    /* 高いz-indexを設定 */
 }
 
 #answer {
@@ -423,7 +425,7 @@ input[disabled] {
 }
 
 #next-question-button {
-    background-color: #4CAF50;
+    background-color: #f11010;
     color: white;
     padding: 10px 20px;
     border: none;
