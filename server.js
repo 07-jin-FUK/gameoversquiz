@@ -29,10 +29,6 @@ wss.on('connection', ws => {
     });
 });
 
-server.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
-
 // ここからは以前のコードのまま
 
 let clients = [];
@@ -218,3 +214,7 @@ function resetGame() {
     currentQuestionIndex = 0;
     quizActive = false;
 }
+
+server.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+});

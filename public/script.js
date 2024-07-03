@@ -333,7 +333,7 @@ function restartGame() {
 }
 
 function returnToTitle() {
-    window.location.href = 'your-title-url.html'; // タイトル画面のURLにリダイレクト
+    window.location.href = 'https://axella1.sakura.ne.jp/project/splash'; // タイトル画面のURLにリダイレクト
 }
 
 function showSpinner() {
