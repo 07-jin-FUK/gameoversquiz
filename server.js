@@ -4,9 +4,7 @@ const port = process.env.PORT || 443;
 const wss = new WebSocket.Server({ port: port });
 console.log(`WebSocket server is running on ws://localhost:${port}`);
 
-
 // ここからは以前のコードのまま
-
 
 let clients = [];
 let connectedUsers = new Map(); // ユーザーとスコアを管理するMap
@@ -191,5 +189,3 @@ function resetGame() {
     currentQuestionIndex = 0;
     quizActive = false;
 }
-
-console.log('WebSocket server is running on ws://localhost:8081');
