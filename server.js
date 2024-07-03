@@ -55,7 +55,6 @@ wss.on('connection', ws => {
                 console.log(`Old connection for user ${parsedMessage.user} removed`);
             }
 
-
             connectedUsers.set(parsedMessage.user, 0); // 新しいユーザーをスコア0で登録
             userHP.set(parsedMessage.user, maxHP); // 新しいユーザーをHP5で登録
             console.log(`User registered: ${parsedMessage.user}`);
@@ -103,7 +102,7 @@ wss.on('connection', ws => {
                 // 相手のHPを減らす
                 for (let [user, hp] of userHP.entries()) {
                     if (user !== parsedMessage.user) {
-                        let damage = currentQuestion.type === "danger" ? 2 : 1;
+                        let damage = currentQuestion.type === "danger" ? 2 : 1; // デンジャー問題の場合はダメージ2倍
                         if (hp - damage <= 0) {
                             userHP.set(user, 0); // 相手のHPを0に設定
                             quizActive = false;
@@ -126,8 +125,8 @@ wss.on('connection', ws => {
                             resetGame();
                             break;
                         } else {
-                            userHP.set(user, hp - 1);
-                            console.log(`${user}'s HP decreased to ${hp - 1}`);
+                            userHP.set(user, hp - damage);
+                            console.log(`${user}'s HP decreased to ${hp - damage}`);
                         }
                     }
                 }
@@ -208,7 +207,6 @@ wss.on('connection', ws => {
                 userHP.delete(user);
                 console.log(`Removed user ${user} from connectedUsers`);
             }
-
         });
         clients.forEach(client => {
             if (client.readyState === WebSocket.OPEN) {
