@@ -31,7 +31,9 @@ const questions = [
     { question: "数値列の平均値を返すために使用されるSQL関数は何ですか？", example: "SELECT ____(column_name) FROM table1;", answer: "AVG" },
     { question: "結果セットを並べ替えるために使用されるSQL句は何ですか？", example: "SELECT * FROM table1 ____ column_name ASC;", answer: "ORDER BY" },
     { question: "テーブル内の既存のレコードを更新するために使用されるSQL文は何ですか？", example: "____ table1 SET column1 = value1 WHERE condition;", answer: "UPDATE" },
-    { question: "数値列の値を合計するために使用されるSQL関数は何ですか？", example: "SELECT ____(column_name) FROM table1;", answer: "SUM" }
+    { question: "数値列の値を合計するために使用されるSQL関数は何ですか？", example: "SELECT ____(column_name) FROM table1;", answer: "SUM" },
+    { question: "！ラッキー問題！これに正解するとHPが20％回復！太郎先生の名言、次に入るものは？", example: "code is ____", answer: "量", type: "lucky" },
+    { question: "！正解でダメージ2倍！このゲームのタイトルは？", example: "Why ____?;", answer: "Fight", type: "danger" }
 ];
 const maxHP = 5; // 最大HP
 let quizActive = false;
@@ -83,18 +85,26 @@ wss.on('connection', ws => {
                 correct: false,
             };
 
-            if (parsedMessage.answer.toLowerCase() === questions[currentQuestionIndex].answer.toLowerCase()) {
+            const currentQuestion = questions[currentQuestionIndex];
+            if (parsedMessage.answer.toLowerCase() === currentQuestion.answer.toLowerCase()) {
                 result.correct = true;
                 let currentScore = connectedUsers.get(parsedMessage.user);
                 connectedUsers.set(parsedMessage.user, currentScore + 1); // スコアを更新
                 console.log(`${parsedMessage.user} scored! Current score: ${currentScore + 1}`);
+
+                if (currentQuestion.type === "lucky") {
+                    let currentHP = userHP.get(parsedMessage.user);
+                    userHP.set(parsedMessage.user, Math.min(currentHP + 1, maxHP)); // HPを回復
+                    console.log(`${parsedMessage.user}'s HP increased to ${currentHP + 1}`);
+                }
 
                 let opponentDefeated = false; // 敵が倒されたかどうかを示すフラグ
 
                 // 相手のHPを減らす
                 for (let [user, hp] of userHP.entries()) {
                     if (user !== parsedMessage.user) {
-                        if (hp - 1 <= 0) {
+                        let damage = currentQuestion.type === "danger" ? 2 : 1;
+                        if (hp - damage <= 0) {
                             userHP.set(user, 0); // 相手のHPを0に設定
                             quizActive = false;
                             opponentDefeated = true; // 敵が倒されたことを示す

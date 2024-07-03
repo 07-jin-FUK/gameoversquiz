@@ -48,7 +48,7 @@ function connectWebSocket() {
             document.getElementById('match-found-message').style.display = 'block'; // 新しいメッセージを表示
             document.getElementById('state3-bgm').pause(); // 状態3のBGMを停止
             let state4Bgm = document.getElementById('state4-bgm');
-            state4Bgm.volume = 0.2; // 音量を50%に設定
+            state4Bgm.volume = 0.3; // 音量を50%に設定
             state4Bgm.play();
             const opponent = message.initialScores.find(([username]) => username !== user);
             if (opponent) {
@@ -159,6 +159,10 @@ function connectWebSocket() {
 }
 
 function resetClientState() {
+    // 名前を保持
+    const usernameInput = document.getElementById('username');
+    const previousUser = usernameInput.value;
+
     user = '';
     document.getElementById('user-section').style.display = 'block';
     document.getElementById('waiting-message').style.display = 'none';
@@ -175,7 +179,26 @@ function resetClientState() {
     document.getElementById('final-image').style.display = 'none';
     victoryDisplayed = false;
     ws.close();
+
+    // CSSのリセット
+    document.getElementById('content-container').style.opacity = 1;
+    document.getElementById('content-container').style.display = 'flex';
+
+    // 名前を保持して再入力
+    usernameInput.value = previousUser;
+
+    // BGMの停止
+    document.getElementById('state3-bgm').pause();
+    document.getElementById('state3-bgm').currentTime = 0;
+    document.getElementById('state4-bgm').pause();
+    document.getElementById('state4-bgm').currentTime = 0;
 }
+
+function restartGame() {
+    resetClientState();
+    document.getElementById('end-game').classList.add('hidden');
+}
+
 
 function sendAnswer() {
     const answerInput = document.getElementById('answer');
@@ -347,8 +370,11 @@ function showVictoryCutin() {
     // 勝利カットイン効果音を再生
     document.getElementById('victory-sound1').play();
     setTimeout(() => {
+        document.getElementById('victory-sound3').play();
+    }, 1000); // 1秒後に2つ目の効果音を再生
+    setTimeout(() => {
         document.getElementById('victory-sound2').play();
-    }, 4000); // 5秒後に2つ目の効果音を再生
+    }, 3500); // 3.5秒後に3つ目の効果音を再生
 
     setTimeout(() => {
         victoryElement.classList.remove('show');
@@ -366,20 +392,20 @@ function showVictoryCutin() {
     }, 7000); // 7秒後に非表示にする
 }
 
-function restartGame() {
-    document.getElementById('end-game').classList.add('hidden');
-    document.getElementById('responses').innerHTML = '';
-    document.querySelector('#my-hp .hp-bar-inner').style.width = '100%';
-    document.querySelector('#opponent-hp .hp-bar-inner').style.width = '100%';
-    document.querySelector('#my-hp .hp-bar-inner').style.backgroundColor = 'green';
-    document.querySelector('#opponent-hp .hp-bar-inner').style.backgroundColor = 'green';
-    document.getElementById('user-section').style.display = 'block';
-    document.getElementById('final-background').style.display = 'none';
-    document.getElementById('final-image').style.display = 'none';
-    victoryDisplayed = false; // フラグをリセット
-    user = '';
-    ws.close();
-}
+// function restartGame() {
+//     document.getElementById('end-game').classList.add('hidden');
+//     document.getElementById('responses').innerHTML = '';
+//     document.querySelector('#my-hp .hp-bar-inner').style.width = '100%';
+//     document.querySelector('#opponent-hp .hp-bar-inner').style.width = '100%';
+//     document.querySelector('#my-hp .hp-bar-inner').style.backgroundColor = 'green';
+//     document.querySelector('#opponent-hp .hp-bar-inner').style.backgroundColor = 'green';
+//     document.getElementById('user-section').style.display = 'block';
+//     document.getElementById('final-background').style.display = 'none';
+//     document.getElementById('final-image').style.display = 'none';
+//     victoryDisplayed = false; // フラグをリセット
+//     user = '';
+//     ws.close();
+// }
 
 function returnToTitle() {
     window.location.href = 'https://axella1.sakura.ne.jp/project/splash'; // タイトル画面のURLにリダイレクト
