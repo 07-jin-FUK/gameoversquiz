@@ -9,6 +9,11 @@ const port = process.env.PORT || 443;
 // 静的ファイルの提供
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ルートパスに対するリクエストを処理
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
