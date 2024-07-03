@@ -115,7 +115,9 @@ function connectWebSocket() {
             showVictoryCutin(); // 勝利カットインを表示
 
             document.getElementById('end-game').classList.remove('hidden');
+            document.getElementById('end-game').style.display = 'block';
             document.getElementById('winner-message').textContent = message.winner; // 勝者メッセージを表示
+            console.log("End game modal should be visible now");
         }
         if (message.type === 'showNextButton') {
             if (!victoryDisplayed) {
