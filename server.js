@@ -1,20 +1,31 @@
-const fs = require('fs');
-const https = require('https');
+const http = require('http');
 const WebSocket = require('ws');
+const express = require('express');
+const path = require('path');
 
-// SSL証明書の読み込み（Renderでは自動的に提供されるため省略可能）
-const server = https.createServer({
-    // cert: fs.readFileSync('/path/to/cert.pem'),
-    // key: fs.readFileSync('/path/to/key.pem')
-});
-
+const app = express();
 const port = process.env.PORT || 443;
 
+// 静的ファイルの提供
+app.use(express.static(path.join(__dirname)));
+
+const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
-console.log(`WebSocket server is running on wss://localhost:${port}`);
+
+wss.on('connection', ws => {
+    console.log('New client connected');
+    ws.on('message', message => {
+        console.log(`Received message: ${message}`);
+        // メッセージ処理のロジック
+    });
+
+    ws.on('close', () => {
+        console.log('Client disconnected');
+    });
+});
 
 server.listen(port, () => {
-    console.log(`HTTPS server is running on port ${port}`);
+    console.log(`Server is running on http://localhost:${port}`);
 });
 
 // ここからは以前のコードのまま
