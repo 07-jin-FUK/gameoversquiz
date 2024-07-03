@@ -478,3 +478,26 @@ input[disabled] {
 .modal button:hover {
     background-color: #45a049;
 }
+
+/* 名前のスタイルを追加 */
+#my-name,
+#opponent-name {
+    position: absolute;
+    top: 50px;
+    /* HPバーの下の位置に合わせて調整 */
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    z-index: 1001;
+    text-shadow: 2px 2px 5px black;
+}
+
+#my-name {
+    left: 10px;
+    /* 左端に固定 */
+}
+
+#opponent-name {
+    right: 10px;
+    /* 右端に固定 */
+}

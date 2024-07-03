@@ -50,6 +50,10 @@ function connectWebSocket() {
             let state4Bgm = document.getElementById('state4-bgm');
             state4Bgm.volume = 0.2; // 音量を50%に設定
             state4Bgm.play();
+            const opponent = message.initialScores.find(([username]) => username !== user);
+            if (opponent) {
+                document.getElementById('opponent-name').textContent = opponent[0];
+            }
             setTimeout(() => {
                 document.getElementById('match-found-message').style.display = 'none';
                 document.getElementById('main-content').classList.remove('hidden');
@@ -114,10 +118,12 @@ function connectWebSocket() {
             updateHP(message.hp); // 勝利カットイン前にHPを更新
             showVictoryCutin(); // 勝利カットインを表示
 
-            document.getElementById('end-game').classList.remove('hidden');
-            document.getElementById('end-game').style.display = 'block';
-            document.getElementById('winner-message').textContent = message.winner; // 勝者メッセージを表示
-            console.log("End game modal should be visible now");
+            setTimeout(() => {
+                document.getElementById('end-game').classList.remove('hidden');
+                document.getElementById('end-game').style.display = 'block';
+                document.getElementById('winner-message').textContent = message.winner; // 勝者メッセージを表示
+                console.log("End game modal should be visible now");
+            }, 10000);  // 10秒後にモーダルを表示する
         }
         if (message.type === 'showNextButton') {
             if (!victoryDisplayed) {
@@ -178,6 +184,9 @@ function startQuiz() {
 
         // GO効果音を再生
         document.getElementById('go-sound').play();
+
+        // ユーザー名を設定
+        document.getElementById('my-name').textContent = user;
 
         connectWebSocket();
         // 状態3BGMを再生
@@ -329,7 +338,7 @@ function showVictoryCutin() {
         // 3秒後にモーダルを表示
         setTimeout(() => {
             document.getElementById('end-game').classList.remove('hidden');
-        }, 3000);
+        }, 10000);
 
     }, 7000); // 7秒後に非表示にする
 }
