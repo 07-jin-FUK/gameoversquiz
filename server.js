@@ -7,7 +7,7 @@ const app = express();
 const port = process.env.PORT || 443;
 
 // 静的ファイルの提供
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, 'public')));
 
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
