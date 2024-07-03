@@ -142,8 +142,8 @@ function connectWebSocket() {
             document.getElementById('answer').value = ''; // 回答欄をリセット
         }
         if (message.type === 'opponentDisconnected') {
-            alert('対戦相手の接続が切れました。名前入力画面に戻ります。');
-            resetClientState();
+            alert('対戦相手の接続が切れました。初期画面に戻ります。');
+            location.reload(); // ページを再読み込みして初期画面に戻す
         }
     };
 
@@ -195,8 +195,8 @@ function resetClientState() {
 }
 
 function restartGame() {
-    resetClientState();
-    document.getElementById('end-game').classList.add('hidden');
+    // ページを再読み込みして初期状態に戻す
+    location.reload();
 }
 
 
@@ -275,6 +275,7 @@ function startCountdownForNext() {
         document.getElementById('ready-message').style.display = 'none';
         document.getElementById('quiz-section').style.display = 'block';
         document.getElementById('next-question').style.display = 'none'; // カウントダウン中は非表示にする
+        document.getElementById('fight-sound').play();
     }, 6000);  // 6秒後に画面を切り替える
 }
 
@@ -383,6 +384,9 @@ function showVictoryCutin() {
 
         // Final-imageが表示されるタイミングで効果音を再生
         document.getElementById('final-sound').play();
+        setTimeout(() => {
+            document.getElementById('victory-sound').play();
+        }, 3000); // 3秒後に3つ目の効果音を再生
 
         // 3秒後にモーダルを表示
         setTimeout(() => {
