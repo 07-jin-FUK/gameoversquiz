@@ -1,0 +1,474 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Press Start 2P", Arial, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    overflow: hidden;
+    background-color: black;
+}
+
+#header {
+    position: fixed;
+    top: 20px;
+    right: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1002;
+}
+
+#my-hp,
+#opponent-hp {
+    width: 35%;
+    height: 27px;
+    position: relative;
+    margin: 0 8%;
+}
+
+.hp-bar {
+    position: relative;
+    height: 100%;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.hp-bar-inner {
+    height: 100%;
+    background: linear-gradient(to right, #08c508, #02b802 100%);
+    /* 初期値の色設定 */
+    border: 1px solid #004d00;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    transition: width 2s ease-in-out, background-color 1s;
+    z-index: 2;
+}
+
+.hp-bar.my-hp-bar {
+    right: 0;
+    transform: rotateY(180deg);
+    /* HPバーを反転 */
+}
+
+.hp-bar.opponent-hp-bar {
+    left: 0;
+}
+
+#countdown {
+    font-family: "Press Start 2P", Arial, sans-serif;
+    font-size: 50px;
+    color: rgb(249, 250, 250);
+    text-shadow: 2px 2px 5px black;
+}
+
+#quiz-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+#quiz {
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+}
+
+#example {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #000;
+}
+
+#answer-section {
+    position: fixed;
+    bottom: 100px;
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#answer {
+    width: 30%;
+    padding: 10px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: 2px solid #000;
+}
+
+#answer-button {
+    margin-left: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    border-radius: 5px;
+    border: 2px solid #000;
+    background-color: #4CAF50;
+    color: white;
+    cursor: pointer;
+}
+
+#quiz-section,
+#waiting-message,
+#ready-message,
+#end-game,
+#next-question,
+#scores {
+    display: none;
+}
+
+#main-content {
+    position: fixed;
+    top: 100px;
+    width: 100%;
+    max-width: 1200px;
+    height: 80vh;
+    text-align: center;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    background-image: url('./node_modules/Img/gardo.gif');
+    background-size: cover;
+}
+
+.ready {
+    display: none;
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    transition: transform 0.5s ease-out, opacity 0.5s ease-out;
+}
+
+.ready.show {
+    opacity: 1;
+}
+
+.ready img {
+    width: auto;
+    height: 100vh;
+}
+
+.attack,
+.damage {
+    position: fixed;
+    top: 53%;
+    transform: translateY(-50%);
+    font-size: 3em;
+    font-weight: bold;
+    color: rgb(252, 174, 174);
+    text-shadow: 2px 2px 5px black;
+    animation-duration: 4s;
+    animation-timing-function: ease-in-out;
+    z-index: 1001;
+}
+
+.attack img,
+.damage img {
+    width: 800px;
+    height: auto;
+}
+
+.attack {
+    left: -800px;
+}
+
+.damage {
+    right: -800px;
+}
+
+.attack.animate {
+    animation-name: attackAnimation;
+}
+
+.damage.animate {
+    animation-name: damageAnimation;
+}
+
+@keyframes attackAnimation {
+    0% {
+        left: -800px;
+    }
+
+    50% {
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    75% {
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    100% {
+        left: 100%;
+        transform: translateY(-50%);
+    }
+}
+
+@keyframes damageAnimation {
+    0% {
+        right: -800px;
+    }
+
+    50% {
+        right: 50%;
+        transform: translate(50%, -50%);
+    }
+
+    75% {
+        right: 50%;
+        transform: translate(50%, -50%);
+    }
+
+    100% {
+        right: 100%;
+        transform: translateY(-50%);
+    }
+}
+
+.cutin-background {
+    display: none;
+    position: fixed;
+    top: 12%;
+    left: 0;
+    width: 100%;
+    height: 80%;
+    background-size: cover;
+    background-position: center;
+    z-index: 1000;
+}
+
+.cutin-background.show {
+    display: block;
+}
+
+.attack-background {
+    background-image: url('./node_modules/Img/ao.gif');
+}
+
+.damage-background {
+    background-image: url('./node_modules/Img/aka.gif');
+}
+
+.victory-background {
+    background-image: url('./node_modules/Img/last.gif');
+    z-index: 1005;
+}
+
+.correct {
+    color: red;
+    display: inline;
+}
+
+.correct::after {
+    content: ' 〇';
+}
+
+.incorrect {
+    color: blue;
+}
+
+input[disabled] {
+    background-color: lightgray;
+}
+
+.countdown-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 5px 20px;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1003;
+}
+
+#introGif {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    height: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    object-fit: contain;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+    background-color: rgba(0, 0, 0, 1);
+}
+
+#content-container {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.5s;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#user-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 600px;
+    height: 400px;
+}
+
+#username {
+    font-size: 16px;
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 60%;
+    text-align: center;
+}
+
+#user-section button {
+    font-size: 16px;
+    padding: 10px 20px;
+    margin: 5px;
+    cursor: pointer;
+    width: 20%;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
+.yoko {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 400px;
+}
+
+#waiting-message {
+    display: none;
+    color: white;
+    font-size: 24px;
+    text-align: center;
+}
+
+#match-found-message {
+    display: none;
+    color: white;
+    font-size: 24px;
+    text-align: center;
+}
+
+.spinner {
+    display: none;
+    width: 50px;
+    height: 50px;
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    position: fixed;
+    top: 30%;
+    left: 48%;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#next-question {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 20px;
+}
+
+#next-question p {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+#next-question-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#next-question-button:hover {
+    background-color: #45a049;
+}
+
+#waiting-next {
+    font-size: 16px;
+    color: #555;
+    margin-top: 10px;
+}
+
+/* モーダル用のスタイルを追加 */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 600px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+}
+
+.modal-content {
+    margin: 20px 0;
+}
+
+.modal button {
+    font-size: 18px;
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+}
+
+.modal button:hover {
+    background-color: #45a049;
+}
