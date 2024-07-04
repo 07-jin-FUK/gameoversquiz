@@ -32,7 +32,7 @@ const questions = [
     { question: "結果セットを並べ替えるために使用されるSQL句は何ですか？", example: "SELECT * FROM table1 ____ column_name ASC;", answer: "ORDER BY", type: "normal" },
     { question: "テーブル内の既存のレコードを更新するために使用されるSQL文は何ですか？", example: "____ table1 SET column1 = value1 WHERE condition;", answer: "UPDATE", type: "normal" },
     { question: "数値列の値を合計するために使用されるSQL関数は何ですか？", example: "SELECT ____(column_name) FROM table1;", answer: "SUM", type: "normal" },
-    { question: "！ラッキー問題！これに正解するとHPが20％回復+相手ダメージ！太郎先生の名言、次に入るものは？", example: "code is ____", answer: "量", type: "lucky" },
+    { question: "！ラッキー問題！これに正解するとHPが20％回復+相手ダメージ！G’s名言、次に入るものは？", example: "code is ____", answer: "量", type: "lucky" },
     { question: "！正解でダメージ2倍！このゲームのタイトルは？", example: "Why ____?;", answer: "Fight", type: "danger" },
 ];
 const maxHP = 5; // 最大HP
