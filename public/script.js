@@ -48,7 +48,7 @@ function connectWebSocket() {
             document.getElementById('match-found-message').style.display = 'block'; // 新しいメッセージを表示
             document.getElementById('state3-bgm').pause(); // 状態3のBGMを停止
             let state4Bgm = document.getElementById('state4-bgm');
-            state4Bgm.volume = 0.3; // 音量を50%に設定
+            state4Bgm.volume = 0.4; // 音量を50%に設定
             state4Bgm.play();
             const opponent = message.initialScores.find(([username]) => username !== user);
             if (opponent) {
@@ -240,7 +240,7 @@ function startQuiz() {
         connectWebSocket();
         // 状態3BGMを再生
         let state3Bgm = document.getElementById('state3-bgm');
-        state3Bgm.volume = 0.3; // 音量を50%に設定
+        state3Bgm.volume = 0.4; // 音量を50%に設定
         state3Bgm.play();
     } else {
         alert('Please enter a username');
